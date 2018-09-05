@@ -1,0 +1,25 @@
+{
+  "name": "reason-language-server",
+  "bsc-flags": "-g",
+  "ocaml-flags": ["-g", "-bin-annot"],
+  "warnings": {
+    "number": "-6+7-26-27-32..40-28-44-45",
+    "error": "+8"
+  },
+  "sources": [
+    {"dir": "src", "type": "ppx"},
+    {"dir": "tests", "type": "dev", "subdirs": true, "ppx": ["Let_monad"]}
+  ],
+  "bs-dependencies": ["rex-json"],
+  "ocaml-dependencies": ["compiler-libs", "unix", "bigarray", "str"],
+  "public": ["Main"],
+  "entries": [{
+    "backend": "native",
+    "main-module": "Tests"
+  }, {
+    "backend": "native",
+    "type": "ppx",
+    "main-module": "Let_monad"
+  }],
+  "refmt": 3
+}
