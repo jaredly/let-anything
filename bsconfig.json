@@ -1,5 +1,5 @@
 {
-  "name": "reason-language-server",
+  "name": "let-anything",
   "bsc-flags": "-g",
   "ocaml-flags": ["-g", "-bin-annot"],
   "warnings": {
@@ -8,7 +8,7 @@
   },
   "sources": [
     {"dir": "src", "type": "ppx"},
-    {"dir": "tests", "type": "dev", "subdirs": true, "ppx": ["Let_monad"]}
+    {"dir": "tests", "type": "dev", "subdirs": true, "ppx": ["Let_anything"]}
   ],
   "bs-dependencies": ["rex-json"],
   "ocaml-dependencies": ["compiler-libs", "unix", "bigarray", "str"],
@@ -19,7 +19,7 @@
   }, {
     "backend": "native",
     "type": "ppx",
-    "main-module": "Let_monad"
+    "main-module": "Let_anything"
   }],
   "refmt": 3
 }
