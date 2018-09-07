@@ -1,34 +1,25 @@
 {
-  "name": "@jaredly/reason-language-server",
-  "version": "1.0.0-beta.1",
+  "name": "let-anything",
+  "version": "1.0.0",
   "scripts": {
     "start": "bsb -make-world -backend native -w",
     "build": "bsb -make-world -backend native",
     "clean": "bsb -clean-world",
-    "test": "./lib/bs/native/alltests.native",
-    "watch": "bsb -make-world -backend native -w",
-    "watch:byte": "bsb -make-world -backend bytecode -w",
-    "package": "npm run build && cp lib/bs/native/bin.native editor-extensions/vscode",
-    "vsce": "cd editor-extensions/vscode && vsce package",
-    "zip": "./release.sh",
-    "package:linux": "cp lib/bs/native/bin.native editor-extensions/vscode/bin.native.linux; cd editor-extensions/vscode; vsce package",
-    "package:win": "xcopy /y .\\lib\\bs\\native\\bin.native.exe editor-extensions/vscode & chdir editor-extensions/vscode & vsce package",
-    "postinstall": "bsb -make-world -backend native"
+    "test": "./lib/bs/native/tests.native",
+    "watch": "bsb -make-world -backend native -w"
   },
   "keywords": [
     "Reason",
-    "lsp",
-    "IDE"
+    "Async"
   ],
   "repository": {
-    "url": "jaredly/reason-language-server",
+    "url": "jaredly/let-anything",
     "type": "git"
   },
-  "description": "A pure-reason implementation of a language server",
+  "description": "let%Anything ppx for async/options/results/etc.",
   "author": "Jared Forsyth",
   "license": "ISC",
   "dependencies": {
-    "bs-platform": "bsansouci/bsb-native#3.2.0",
-    "rex-json": "1.4.0"
+    "bs-platform": "bsansouci/bsb-native#3.2.0"
   }
 }
