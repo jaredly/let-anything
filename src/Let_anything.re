@@ -40,8 +40,29 @@ let parseLongident = txt => {
 let mapper = _argv =>
   Parsetree.{
     ...Ast_mapper.default_mapper,
+    /* TODO throw error on structure items */
     expr: (mapper, expr) =>
       switch expr.pexp_desc {
+      | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_loc, pexp_desc: Pexp_try(value, handlers)}, attributes)}]))) => {
+        let ident = parseLongident(txt);
+        let last = Longident.last(ident);
+        if (last != String.capitalize(last)) {
+          Ast_mapper.default_mapper.expr(mapper, expr)
+        } else {
+          let handlerLocStart = List.hd(handlers).pc_lhs.ppat_loc;
+          let handlerLocEnd = List.nth(handlers, List.length(handlers) - 1).pc_rhs.pexp_loc;
+          let handlerLoc = {...handlerLocStart, loc_end: handlerLocEnd.loc_end};
+          let try_ = Ast_helper.Exp.ident(~loc=pexp_loc, Location.mkloc(Longident.Ldot(ident, "try_"), loc));
+          Ast_helper.Exp.apply(
+            ~loc,
+            try_,
+            [
+              ("", mapper.expr(mapper, value)),
+              ("", Ast_helper.Exp.function_(~loc=handlerLoc, handlers))
+            ]
+          )
+        }
+      }
       | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_desc: Pexp_let(Nonrecursive, bindings, continuation)}, attributes)}]))) => {
         let ident = parseLongident(txt);
         let last = Longident.last(ident);
