@@ -18,6 +18,8 @@ Some((
 ))
 ```
 
+### try%Anything
+
 If you have a monad with a "failure" case that you want to be able to handle, `try%Anything expr { | exn => ... }` is translated into `Anything.try_(expr, function { | exn => ...})`.
 So, for a real example:
 ```
