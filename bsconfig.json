@@ -10,7 +10,6 @@
     {"dir": "src", "type": "ppx"},
     {"dir": "tests", "type": "dev", "subdirs": true, "ppx": ["Let_anything"]}
   ],
-  "bs-dependencies": ["rex-json"],
   "ocaml-dependencies": ["compiler-libs", "unix", "bigarray", "str"],
   "public": ["Main"],
   "entries": [{
