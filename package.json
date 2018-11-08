@@ -1,6 +1,6 @@
 {
   "name": "let-anything",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "start": "bsb -make-world -backend native -w",
     "postinstall": "bsb -make-world -backend native",
