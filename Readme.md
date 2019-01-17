@@ -59,3 +59,8 @@ module Result = {
   };
 }
 ```
+
+# Usage
+
+1. Install the NPM package `let-anything` through your favorite `npm` package manager (npm itself or yarn for example)
+2. Add the following path to the `ppx-flags` defined in your `bsconfig.json` file (see bucklescript.github.io/bucklescript/docson/#build-schema.json): `let-anything/lib/bs/native/let_anything.native`
