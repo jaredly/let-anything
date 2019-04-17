@@ -18,20 +18,6 @@ Some((
 ```
 
 ### try%Anything
-If you have a data type that has a "failure" case (like promises, or the `result` type), the `try%Anything` syntax can be helpful.
-Here's the transform:
-
-```
-try%Blah someExpr {
-  | Something(x) => y
-}
-```
-becomes
-```
-Blah.try_(someExpr, result => switch result {
-  | Something(x) => y
-})
-```
 
 Let's make a `try_` function for the `result` type that does a *bind* over the error case:
 ```
@@ -50,6 +36,23 @@ try%Res v {
   | "no user - use default" => Ok(defaultUser)
   | message => Error(ServerError)
 }
+```
+
+#### In the general case
+
+If you have a data type that has a "failure" case (like promises, or the `result` type), the `try%Anything` syntax can be helpful.
+Here's the transform:
+
+```
+try%Blah someExpr {
+  | Something(x) => y
+}
+```
+becomes
+```
+Blah.try_(someExpr, result => switch result {
+  | Something(x) => y
+})
 ```
 
 ## Addendum
