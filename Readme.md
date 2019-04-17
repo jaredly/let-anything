@@ -7,7 +7,6 @@ It's an exploration of [this PR to the reason repo](https://github.com/facebook/
 Here's an example of using it ([source](https://github.com/notablemind/renm/blob/949e1583d4df5e6d61ea066767a52828f8f8069b/src/core/Store.re#L116
 ))
 ```re
-let%OptIf () = id != store.data.root;
 let%Opt node = get(store, id);
 let%Opt parent = get(store, node.parent);
 Some((
@@ -19,17 +18,41 @@ Some((
 ```
 
 ### try%Anything
+If you have a data type that has a "failure" case (like promises, or the `result` type), the `try%Anything` syntax can be helpful.
+Here's the transform:
 
-If you have a monad with a "failure" case that you want to be able to handle, `try%Anything expr { | exn => ... }` is translated into `Anything.try_(expr, function { | exn => ...})`.
-So, for a real example:
 ```
-let%Result value = try%result (getName()) {
-  | Failure(message) => Error("Unable to get name: " ++ message)
-  | DefaultName => Ok("Lorraine")
-  | _ => Error("Unknown error getting name")
-};
+try%Blah someExpr {
+  | Something(x) => y
+}
+```
+becomes
+```
+Blah.try_(someExpr, result => switch result {
+  | Something(x) => y
+})
 ```
 
+Let's make a `try_` function for the `result` type that does a *bind* over the error case:
+```
+module Res = {
+  let try_ = (result, handler) => switch result {
+    | Ok(v) => Ok(v)
+    | Error(e) => handler(e)
+  }
+}
+```
+This will come in handy for the case where we want to transform the error side of a result -- either turning it into a different error type, or turning it into a successful value. For example:
+```
+let v = Error("bad")
+try%Res v {
+  | "invalid username/password" => Error(UserError)
+  | "no user - use default" => Ok(defaultUser)
+  | message => Error(ServerError)
+}
+```
+
+## Addendum
 
 And here are the modules used ([source](https://github.com/notablemind/renm/blob/949e1583d4df5e6d61ea066767a52828f8f8069b/src/utils/Lets.re))
 ```re
@@ -37,14 +60,6 @@ module Opt = {
   let let_ = (a, b) => switch (a) {
     | None => None
     | Some(x) => b(x)
-  }
-};
-
-module OptIf = {
-  let let_ = (a, b) => if (a) {
-    b()
-  } else {
-    None
   }
 };
 
