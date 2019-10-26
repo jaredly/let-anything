@@ -14,7 +14,10 @@ module Opt_map = {
 };
 
 module Result = {
-  include Belt.Result;
+ type t('a, 'b) =
+  | Ok('a)
+  | Error('b);
+
   let let_ = (v, fn) => switch v {
     | Ok(o) => fn(o)
     | Error(_) => v
@@ -28,12 +31,12 @@ module Result = {
 let z = {
   let%Result x = Ok(5);
   let%Result y = try%Result (Error("fail")) {
-    | x => Ok(40)
+    | _x => Ok(40)
   };
   Ok(x + y)
 }
 
-let x = {
+let _x = {
   let%Opt y = Some(2);
   let%Opt_map x = Some(10);
   x + 2 + y
