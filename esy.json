@@ -6,6 +6,9 @@
     "@opam/reason": "*",
     "@opam/ocaml-migrate-parsetree": "*"
   },
+  "esy": {
+    "build": "dune build --profile=release"
+  },
   "devDependencies": {
     "@opam/merlin": "*"
   }
