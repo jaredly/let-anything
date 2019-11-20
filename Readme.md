@@ -1,3 +1,5 @@
+# Deprecated, use the [reasonml-community](https://github.com/reasonml-community/let-anything) one
+
 # let%Anything
 
 This is a ppx that looks for `let%Anything`, where Anything is a valid module identifier (e.g. captialized), and turns it into `Anything.let_(value, pattern => continuation)`.
