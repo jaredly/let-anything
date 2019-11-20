@@ -1,0 +1,7 @@
+(library
+ (name let_anything)
+ (public_name Let_anything)
+ (flags
+  (:standard -w -9-3))
+ (kind ppx_rewriter)
+ (libraries reason compiler-libs unix bigarray str))

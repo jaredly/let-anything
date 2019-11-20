@@ -1,0 +1,4 @@
+(executable
+ (name tests)
+ (preprocess
+  (pps Let_anything)))

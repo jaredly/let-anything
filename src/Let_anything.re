@@ -1,3 +1,5 @@
+open Migrate_parsetree;
+open Ast_406;
 
 /***
  * https://ocsigen.org/lwt/dev/api/Ppx_lwt
@@ -18,8 +20,8 @@ let rec process_bindings = (bindings, ident) =>
             ~loc=binding.pvb_loc,
             Ast_helper.Exp.ident(~loc=binding.pvb_loc, Location.mkloc(Longident.Ldot(ident, "and_"), binding.pvb_loc)),
             [
-              ("", binding.pvb_expr),
-              ("", expr)
+              (Nolabel, binding.pvb_expr),
+              (Nolabel, expr)
             ]
           )
       )
@@ -37,13 +39,13 @@ let parseLongident = txt => {
   loop(None, parts)
 };
 
-let mapper = _argv =>
-  Parsetree.{
+let mapper = (_config, _cookies) =>
+  {
     ...Ast_mapper.default_mapper,
     /* TODO throw error on structure items */
     expr: (mapper, expr) =>
       switch expr.pexp_desc {
-      | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_loc, pexp_desc: Pexp_try(value, handlers)}, attributes)}]))) => {
+      | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_loc, pexp_desc: Pexp_try(value, handlers)}, _attributes)}]))) => {
         let ident = parseLongident(txt);
         let last = Longident.last(ident);
         if (last != String.capitalize(last)) {
@@ -57,13 +59,13 @@ let mapper = _argv =>
             ~loc,
             try_,
             [
-              ("", mapper.expr(mapper, value)),
-              ("", Ast_helper.Exp.function_(~loc=handlerLoc, handlers))
+              (Nolabel, mapper.expr(mapper, value)),
+              (Nolabel, Ast_helper.Exp.function_(~loc=handlerLoc, handlers))
             ]
           )
         }
       }
-      | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_desc: Pexp_let(Nonrecursive, bindings, continuation)}, attributes)}]))) => {
+      | Pexp_extension(({txt, loc}, PStr([{pstr_desc: Pstr_eval({pexp_desc: Pexp_let(Nonrecursive, bindings, continuation)}, _attributes)}]))) => {
         let ident = parseLongident(txt);
         let last = Longident.last(ident);
         if (last != String.capitalize(last)) {
@@ -75,8 +77,8 @@ let mapper = _argv =>
             ~loc,
             let_,
             [
-              ("", mapper.expr(mapper, expr)),
-              ("", Ast_helper.Exp.fun_(~loc, "", None, pat, mapper.expr(mapper, continuation)))
+              (Nolabel, mapper.expr(mapper, expr)),
+              (Nolabel, Ast_helper.Exp.fun_(~loc, Nolabel, None, pat, mapper.expr(mapper, continuation)))
             ]
           )
         }
@@ -85,4 +87,10 @@ let mapper = _argv =>
       }
   };
 
-let () = Ast_mapper.run_main(mapper);
+let () =
+  Migrate_parsetree.Driver.register(
+    ~name="let-anything",
+    ~args=[],
+    Migrate_parsetree.Versions.ocaml_406,
+    mapper,
+  );

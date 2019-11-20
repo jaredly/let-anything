@@ -1,0 +1,12 @@
+{
+  "name": "let-anything",
+  "dependencies": {
+    "ocaml": "~4.2.3000",
+    "@opam/dune": "*",
+    "@opam/reason": "*",
+    "@opam/ocaml-migrate-parsetree": "*"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*"
+  }
+}

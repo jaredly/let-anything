@@ -1,0 +1,15 @@
+{
+  "name": "let-anything",
+  "dependencies": {
+    "ocaml": "~4.6.1000",
+    "@opam/dune": "*",
+    "@opam/reason": "*",
+    "@opam/ocaml-migrate-parsetree": "*"
+  },
+  "esy": {
+    "build": "dune build --profile=release"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*"
+  }
+}
